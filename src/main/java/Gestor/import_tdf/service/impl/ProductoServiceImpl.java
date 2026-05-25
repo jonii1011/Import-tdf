@@ -3,6 +3,7 @@ package Gestor.import_tdf.service.impl;
 import Gestor.import_tdf.entity.Producto;
 import Gestor.import_tdf.repository.ProductoRepository;
 import Gestor.import_tdf.service.ProductoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,11 +11,8 @@ import java.util.List;
 @Service
 public class ProductoServiceImpl implements ProductoService {
 
-    private final ProductoRepository productoRepository;
-
-    private ProductoServiceImpl(ProductoRepository productoRepository) {
-        this.productoRepository = productoRepository;
-    }
+    @Autowired
+    private ProductoRepository productoRepository;
 
     // LISTAR TODOS
     @Override
@@ -48,7 +46,7 @@ public class ProductoServiceImpl implements ProductoService {
         producto.setCapacidad(productoActualizado.getCapacidad());
         producto.setColor(productoActualizado.getColor());
         producto.setEstadoProducto(productoActualizado.getEstadoProducto());
-        producto.setEstadoStock(productoActualizado.getEstadoStock());
+        producto.setStock(productoActualizado.getStock());
         producto.setOrigenProducto(productoActualizado.getOrigenProducto());
         producto.setPrecioCostoUsd(productoActualizado.getPrecioCostoUsd());
         producto.setPrecioCostoPesos(productoActualizado.getPrecioCostoPesos());

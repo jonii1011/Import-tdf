@@ -3,6 +3,7 @@ package Gestor.import_tdf.service.impl;
 import Gestor.import_tdf.entity.Vendedor;
 import Gestor.import_tdf.repository.VendedorRepository;
 import Gestor.import_tdf.service.VendedorService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,11 +11,8 @@ import java.util.List;
 @Service
 public class VendedorServiceImpl implements VendedorService {
 
-    private final VendedorRepository vendedorRepository;
-
-    public VendedorServiceImpl(VendedorRepository vendedorRepository) {
-        this.vendedorRepository = vendedorRepository;
-    }
+    @Autowired
+    private VendedorRepository vendedorRepository;
 
     @Override
     public List<Vendedor> listarVendedores() {
@@ -23,7 +21,8 @@ public class VendedorServiceImpl implements VendedorService {
 
     @Override
     public Vendedor buscarPorId(Long id) {
-        return vendedorRepository.findById(id).get();
+        return vendedorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Vendedor no encontrado"));
     }
 
     @Override

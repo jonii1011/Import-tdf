@@ -33,8 +33,7 @@ public class Producto {
     @Enumerated(EnumType.STRING)
     private EstadoProducto estadoProducto;
 
-    @Enumerated(EnumType.STRING)
-    private EstadoStock estadoStock;
+    private Integer stock;
 
     @Enumerated(EnumType.STRING)
     private OrigenProducto origenProducto;

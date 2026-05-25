@@ -2,6 +2,7 @@ package Gestor.import_tdf.controller;
 
 import Gestor.import_tdf.entity.Vendedor;
 import Gestor.import_tdf.service.VendedorService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,11 +11,8 @@ import java.util.List;
 @RequestMapping("/vendedores")
 public class VendedorController {
 
+    @Autowired
     private VendedorService vendedorService;
-
-    public VendedorController(VendedorService vendedorService) {
-        this.vendedorService = vendedorService;
-    }
 
     // LISTAR TODOS
     @GetMapping

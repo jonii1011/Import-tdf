@@ -1,6 +1,7 @@
 package Gestor.import_tdf.entity;
 
 import Gestor.import_tdf.enums.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,6 +18,7 @@ public class PagoVenta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "venta_id")
     private Venta venta;
