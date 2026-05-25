@@ -1,6 +1,7 @@
 package Gestor.import_tdf.entity;
 
 import Gestor.import_tdf.enums.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
@@ -50,6 +51,7 @@ public class Producto {
     @JoinColumn(name = "vendedor_id")
     private Vendedor vendedor;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "venta_origen_canje_id")
     private Venta ventaOrigenCanje;

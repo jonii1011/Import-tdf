@@ -1,6 +1,5 @@
 package Gestor.import_tdf.dto;
 
-
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -23,4 +22,6 @@ public class CrearVentaRequest {
     private List<ProductoVentaRequest> productos;
 
     private List<PagoVentaRequest> pagos;
+
+    private ProductoCanjeRequest productoCanje;
 }

@@ -4,8 +4,9 @@ import Gestor.import_tdf.dto.CrearVentaRequest;
 import Gestor.import_tdf.dto.PagoVentaRequest;
 import Gestor.import_tdf.dto.ProductoVentaRequest;
 import Gestor.import_tdf.entity.*;
-import Gestor.import_tdf.enums.EstadoStock;
+import Gestor.import_tdf.enums.EstadoProducto;
 import Gestor.import_tdf.enums.Moneda;
+import Gestor.import_tdf.enums.OrigenProducto;
 import Gestor.import_tdf.repository.*;
 import Gestor.import_tdf.service.VentaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ public class VentaServiceImpl implements VentaService {
 
     @Autowired
     private ProductoRepository productoRepository;
+
+    @Autowired
+    private ProductoCanjeRepository productoCanjeRepository;
 
     @Override
     public List<Venta> listarVentas() {
@@ -60,8 +64,6 @@ public class VentaServiceImpl implements VentaService {
         BigDecimal gananciaTotal = BigDecimal.ZERO;
 
         for (ProductoVentaRequest productoRequest : request.getProductos()) {
-
-            System.out.println(productoRequest.getProductoId());
 
             Producto producto = productoRepository.findById(productoRequest.getProductoId())
                     .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
@@ -123,6 +125,42 @@ public class VentaServiceImpl implements VentaService {
         venta.setTotalVentaPesos(totalVenta);
         venta.setGananciaTotalPesos(gananciaTotal);
 
-        return ventaRepository.save(venta);
+        Venta ventaGuardada = ventaRepository.save(venta);
+
+        if (request.getProductoCanje() != null) {
+
+            Producto productoRecibido = new Producto();
+
+            productoRecibido.setNombre(request.getProductoCanje().getNombre());
+            productoRecibido.setCategoria(request.getProductoCanje().getCategoria());
+            productoRecibido.setMarca(request.getProductoCanje().getMarca());
+            productoRecibido.setModelo(request.getProductoCanje().getModelo());
+            productoRecibido.setCapacidad(request.getProductoCanje().getCapacidad());
+            productoRecibido.setColor(request.getProductoCanje().getColor());
+
+            productoRecibido.setEstadoProducto(EstadoProducto.USADO);
+            productoRecibido.setOrigenProducto(OrigenProducto.CANJE);
+            productoRecibido.setStock(1);
+
+            productoRecibido.setPrecioCostoPesos(request.getProductoCanje().getValorTomadoPesos());
+            productoRecibido.setPrecioVentaPesos(request.getProductoCanje().getPrecioVentaEstimadoPesos());
+
+            productoRecibido.setFechaIngreso(request.getFecha());
+            productoRecibido.setVendedor(vendedor);
+            productoRecibido.setVentaOrigenCanje(ventaGuardada);
+
+            Producto productoGuardado = productoRepository.save(productoRecibido);
+
+            ProductoCanje productoCanje = new ProductoCanje();
+            productoCanje.setVenta(ventaGuardada);
+            productoCanje.setProductoRecibido(productoGuardado);
+            productoCanje.setValorTomadoPesos(request.getProductoCanje().getValorTomadoPesos());
+            productoCanje.setPrecioVentaEstimadoPesos(request.getProductoCanje().getPrecioVentaEstimadoPesos());
+            productoCanje.setObservacion(request.getProductoCanje().getObservacion());
+
+            productoCanjeRepository.save(productoCanje);
+        }
+
+        return ventaGuardada;
     }
 }
